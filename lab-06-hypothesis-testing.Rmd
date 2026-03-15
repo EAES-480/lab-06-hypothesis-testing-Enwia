@@ -1,6 +1,6 @@
 ---
 title: "Lab 06 — Hypothesis Testing from Claims"
-author: "EAES 480 — Modern Statistics in Earth & Environmental Science"
+author: "EAES 480 — Dylan Enwia Modern Statistics in Earth & Environmental Science"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output:
   html_document:
@@ -63,7 +63,7 @@ By the end of this lab, you should be able to:
 
 ## Load and inspect
 
-```{r load_data, echo=TRUE, eval=FALSE}
+```{r load_data, echo=TRUE, eval=TRUE}
 # GOAL: Read the dataset and clean the names.
 
 df <- read_csv("data/us-ams-simple.csv", na = c("-9999")) %>%
@@ -75,7 +75,7 @@ glimpse(df)
 
 ## Derive time columns (if needed)
 
-```{r derive_time, echo=TRUE, eval=FALSE}
+```{r derive_time, echo=TRUE, eval=TRUE}
 # GOAL: Create date / month / day_night columns as in earlier labs.
 
 df <- df %>%
@@ -101,22 +101,22 @@ Possible examples:
 - `gpp`
 - `le`
 
-```{r choose_variable, echo=TRUE, eval=FALSE}
-target_var <- "___"
+```{r choose_variable, echo=TRUE, eval=TRUE}
+target_var <- "ta"
 
 # CHECK: does this variable exist?
-target_var %in% names(df)
+target_var %in% names(df) 
 ```
 
 ## 2) Describe the population parameter
 
 Write the population parameter you care about:
 
-> $\mu$ = the true 2023 population mean of `___`
+> $\mu$ = the true 2023 population mean of `ta`
 
 Fill in the blank in words:
 
-> In this lab, my population parameter is the true annual mean of **`___`** at the US-AMS site.
+> In this lab, my population parameter is the true annual mean of **`air temperature (ta)`** at the US-AMS site.
 
 ---
 
@@ -136,22 +136,22 @@ Now turn your claim into hypotheses:
 
 Fill these in:
 
-> My claim is: `___`
+> My claim is: `The annual mean of air temperature is 12 °C.`
 
-> $H_0$: `___`
+> $H_0$: `The true annual mean of air temperature is 12 °C.`
 
-> $H_A$: `___`
+> $H_A$: `The true annual mean of air temperature will not be 12 °C.`
 
 ---
 
 ## 4) Draw one sample and compute the sample mean
 
-```{r draw_sample, echo=TRUE, eval=FALSE}
+```{r draw_sample, echo=TRUE, eval=TRUE}
 # GOAL: Draw one random sample and compute its mean.
 
-set.seed(___)
+set.seed(10)
 
-n_samp <- ___   # e.g., 200
+n_samp <- 100   # e.g., 200
 
 samp <- df %>%
   filter(!is.na(.data[[target_var]])) %>%
@@ -164,18 +164,18 @@ sample_mean
 
 **Prompt (2–3 sentences):** How does your sample mean compare to your claim? Is it close, or already quite different?
 
-> *Write your answer here.*
+> *It doesn't vary by much it is pretty close. My claim was that air temperature would be 12 °C and for my sample mean its about 13.3 °C.*
 
 ---
 
 ## 5) Bootstrap the sample mean
 
-```{r bootstrap_means, echo=TRUE, eval=FALSE}
+```{r bootstrap_means, echo=TRUE, eval=TRUE}
 # GOAL: Bootstrap the sample mean to estimate uncertainty.
 
-set.seed(___)
+set.seed(100)
 
-B <- ___   # e.g., 4000
+B <- 2000   # e.g., 4000
 
 boot_means <- replicate(
   B,
@@ -187,11 +187,11 @@ head(boot_means)
 
 ## 6) Estimate uncertainty
 
-```{r bootstrap_summary, echo=TRUE, eval=FALSE}
+```{r bootstrap_summary, echo=TRUE, eval=TRUE}
 # GOAL: Compute the bootstrap SE and 95% CI.
 
 boot_se <- sd(boot_means)
-boot_ci <- quantile(boot_means, probs = c(___, ___))
+boot_ci <- quantile(boot_means, probs = c(0.025, 0.095))
 
 tibble(
   sample_mean = sample_mean,
@@ -203,7 +203,7 @@ tibble(
 
 **Prompt (2–3 sentences):** What does the bootstrap SE tell you? What does the 95% CI tell you?
 
-> *Write your answer here.*
+> *The bootstrap SE shows the uncertainty in the estimate by the sample mean varying at repeated samples. My boot_se is 0.96 which shows that the sample mean has uncertainty. The 95% CI tells us that the range for the true 2023 annual mean of air temperature is between 11.5 to 12.1* 
 
 ---
 
@@ -211,10 +211,10 @@ tibble(
 
 Define the null value from your claim.
 
-```{r hypothesis_test, echo=TRUE, eval=FALSE}
+```{r hypothesis_test, echo=TRUE, eval=TRUE}
 # GOAL: Compute z and p-value for your claim.
 
-mu0 <- ___   # numeric claim value
+mu0 <- 12   # numeric claim value
 
 z_stat <- (sample_mean - mu0) / boot_se
 
@@ -241,25 +241,25 @@ Use your p-value and CI to answer:
 
 Fill in:
 
-> The null value `___` is / is not inside my 95% CI.
+> The null value `is` inside my 95% CI.
 
-> My p-value is `___`, which is small / large.
+> My p-value is `0.169`, which is large.
 
-> Therefore, I would / would not reject $H_0$ at the 0.05 level.
+> Therefore, I would not reject $H_0$ at the 0.05 level.
 
 **Prompt (4–6 sentences):** Explain your decision in plain language. Do the data make the claim look plausible or surprising? Be careful: “fail to reject” does not mean “prove true.”
 
-> *Write your answer here.*
+> *Basically the data here looks plausible. The reason I say this is first my p-value is large and my null value of 12 is inside my 95% CI. From this I wouldn't reject the $H_0$ at the 0.05 level. Overall the data doesn't provide strong evidence that the true value is different from 12. But failing to reject the null hypothesis doesn't prove that the true value is exactly 12, but it means that the data isn't surprising if the true value was 12. *
 
 ---
 
 ## 9) Visualize the hypothesis test
 
-```{r plot_test, echo=TRUE, eval=FALSE}
+```{r plot_test, echo=TRUE, eval=TRUE}
 # GOAL: Plot the bootstrap distribution, sample mean, CI, and null value.
 
 ggplot(tibble(boot_mean = boot_means), aes(x = boot_mean)) +
-  geom_histogram(bins = ___, alpha = 0.8) +
+  geom_histogram(bins = 50, alpha = 0.8) +
   geom_vline(xintercept = sample_mean, linetype = "dashed", linewidth = 1.1) +
   geom_vline(xintercept = boot_ci, color = "red", linewidth = 1.1) +
   geom_vline(xintercept = mu0, color = "blue", linewidth = 1.1) +
@@ -274,7 +274,7 @@ ggplot(tibble(boot_mean = boot_means), aes(x = boot_mean)) +
 
 **Prompt (2–3 sentences):** Does the plot agree with your p-value-based conclusion? Explain.
 
-> *Write your answer here.*
+> *Yes, the plot agrees with the p-value–based conclusion. The blue line in the plot is inside the 95% CI and within the bootstrap distribution range. This shows that the value of 12 here is plausible and isn't surprising thus matches the p-value of 0.169 and supports the decision to fail to reject $H_0$.*
 
 ---
 
@@ -282,10 +282,10 @@ ggplot(tibble(boot_mean = boot_means), aes(x = boot_mean)) +
 
 Keep the same variable, but test a **different null value**.
 
-```{r second_claim, echo=TRUE, eval=FALSE}
+```{r second_claim, echo=TRUE, eval=TRUE}
 # GOAL: Test a second claim using the same sample and bootstrap SE.
 
-mu0_alt <- ___
+mu0_alt <- 10
 
 z_stat_alt <- (sample_mean - mu0_alt) / boot_se
 p_value_alt <- 2 * pnorm(-abs(z_stat_alt))
@@ -299,7 +299,7 @@ tibble(
 
 **Prompt (3–4 sentences):** How did changing the null value change the conclusion? What does this tell you about the relationship between the null hypothesis and the observed estimate?
 
-> *Write your answer here.*
+> *Changing my null value from 12 to 10 did change the conclusion. When the null value was 12, it was inside the 95% CI and produced a large p-value (0.169), so it failed to reject $H_0$. When we changed the null value to 10, the z_stat_alt was large and the p-value became very small (0.0005), so here we can reject $H_0$. This shows the null value is far from the observed estimate and the data looks surprising. *
 
 ---
 
@@ -321,14 +321,14 @@ You will first work with a built-in grouping variable (**day vs night**), then c
 
 If you already created `day_night` earlier, you can reuse it. Otherwise, create it here.
 
-```{r make_daynight, echo=TRUE, eval=FALSE}
+```{r make_daynight, echo=TRUE, eval=TRUE}
 # GOAL: create a day/night grouping variable from `daytime`.
 
 df <- df %>%
   mutate(
-    day_night = if_else(___ == 1, "Day", "Night")
+    day_night = if_else(daytime == 1, "Day", "Night")
   ) %>% 
-  filter(!is.na(___))
+  filter(!is.na(daytime))
 
 df %>% count(day_night)
 ```
@@ -346,8 +346,8 @@ Possible examples:
 - `gpp`
 - `le`
 
-```{r choose_response_ttest, echo=TRUE, eval=FALSE}
-response_var <- "___"
+```{r choose_response_ttest, echo=TRUE, eval=TRUE}
+response_var <- "swc"
 
 # CHECK: does this variable exist?
 response_var %in% names(df)
@@ -365,12 +365,12 @@ You may use:
 - `geom_jitter()`
 - or a combination
 
-```{r plot_daynight, echo=TRUE, eval=FALSE}
+```{r plot_daynight, echo=TRUE, eval=TRUE}
 # GOAL: visualize the response by day/night group.
 
 df %>%
   filter(!is.na(.data[[response_var]])) %>%
-  ggplot(aes(x = ___, y = ___, fill = ___)) +
+  ggplot(aes(x = day_night, y = .data[[response_var]], fill = day_night)) +
   geom_boxplot(alpha = 0.8) +
   theme_classic(base_size = 18) +
   labs(
@@ -383,7 +383,7 @@ df %>%
 **Prompt (2–3 sentences):** Before running the test, what do you predict?  
 Do the groups look different in center? In spread?
 
-> *Write your answer here.*
+> *Before running the test I would predict that soil water content will not differ that much. The box plot shows that the groups have similar centers and also the spread looks similar between the groups.*
 
 ---
 
@@ -391,16 +391,16 @@ Do the groups look different in center? In spread?
 
 Compute the group means, SDs, and sample sizes.
 
-```{r summarize_daynight, echo=TRUE, eval=FALSE}
+```{r summarize_daynight, echo=TRUE, eval=TRUE}
 # GOAL: summarize the response variable by day/night group.
 
 group_summary <- df %>%
   filter(!is.na(.data[[response_var]])) %>%
-  group_by(___) %>%
+  group_by(day_night) %>%
   summarise(
-    mean_response = ___,
-    sd_response = ___,
-    n = ___,
+    mean_response = mean(.data[[response_var]], na.rm = TRUE),
+    sd_response = sd(.data[[response_var]], na.rm = TRUE),
+    n = n(),
     .groups = "drop"
   )
 
@@ -420,11 +420,11 @@ Use this structure:
 
 Fill in:
 
-> My response variable is `___`
+> My response variable is `soil water content (swc)`
 
-> $H_0$: `___`
+> $H_0$: `The mean soil water temperature is the same between Day and Night.`
 
-> $H_A$: `___`
+> $H_A$: `The mean soil water temperature isn't the same between Day and Night. `
 
 ---
 
@@ -432,12 +432,12 @@ Fill in:
 
 Use `t.test()` to compare the means of your response variable between Day and Night.
 
-```{r ttest_daynight, echo=TRUE, eval=FALSE}
+```{r ttest_daynight, echo=TRUE, eval=TRUE}
 # GOAL: run a two-sample t-test by formula.
 
 t.test(
-  ___ ~ ___,
-  data = ___
+  swc ~ day_night,
+  data = df
 )
 ```
 
@@ -445,7 +445,7 @@ t.test(
 Would you reject the null hypothesis at $\alpha = 0.05$?  
 What does the result imply about day vs night differences in your chosen variable?
 
-> *Write your answer here.*
+> *The p-value is < 2.2e-16 which is small. The 95% CI interval is -1.399 to -0.90, which doesn't include 0. Because the p-value is extremely small and the confidence interval excludes zero, we reject the null hypothesis that the two group means are equal. This result implies that soil water content differs significantly between day and night. Also the mean SWC is lower during the day (35.38) than at night (36.52).*
 
 ---
 
@@ -453,12 +453,12 @@ What does the result imply about day vs night differences in your chosen variabl
 
 Extract the confidence interval and interpret it as a difference in means.
 
-```{r ttest_store, echo=TRUE, eval=FALSE}
+```{r ttest_store, echo=TRUE, eval=TRUE}
 # GOAL: store the t-test result in an object.
 
 tt_daynight <- t.test(
-  ___ ~ ___,
-  data = ___
+  swc ~ day_night,
+  data = df
 )
 
 tt_daynight$conf.int
@@ -467,7 +467,7 @@ tt_daynight$conf.int
 **Prompt (2–3 sentences):** Does the confidence interval include 0?  
 How does that connect to the hypothesis test decision?
 
-> *Write your answer here.*
+> *No, the confidence interval doesn't include 0. Because the interval excludes 0, this supports the decision to reject the null hypothesis.*
 
 ---
 
@@ -475,19 +475,19 @@ How does that connect to the hypothesis test decision?
 
 Create bootstrap distributions of the **group means** for Day and Night separately.
 
-```{r bootstrap_group_means, echo=TRUE, eval=FALSE}
-set.seed(___)
+```{r bootstrap_group_means, echo=TRUE, eval=TRUE}
+set.seed(100)
 
-B <- ___   # e.g., 2000
+B <- 2000   # e.g., 2000
 
 x_day <- df %>%
   filter(day_night == "Day") %>%
-  pull(___) %>%
+  pull(.data[[response_var]]) %>%
   na.omit()
 
 x_night <- df %>%
   filter(day_night == "Night") %>%
-  pull(___) %>%
+  pull(.data[[response_var]]) %>%
   na.omit()
 
 boot_day <- replicate(
@@ -506,11 +506,11 @@ boot_groups <- bind_rows(
 )
 ```
 
-```{r plot_boot_groups, echo=TRUE, eval=FALSE}
+```{r plot_boot_groups, echo=TRUE, eval=TRUE}
 # GOAL: visualize the bootstrap distributions by group.
 
 ggplot(boot_groups, aes(x = mean_est, fill = group)) +
-  geom_histogram(alpha = 0.45, bins = ___, position = "identity") +
+  geom_histogram(alpha = 0.45, bins = 50, position = "identity") +
   theme_classic(base_size = 18) +
   labs(
     x = paste0("Bootstrap mean of ", response_var),
@@ -522,7 +522,7 @@ ggplot(boot_groups, aes(x = mean_est, fill = group)) +
 **Prompt (3–4 sentences):** How does this bootstrap visualization help you understand the t-test result?  
 Do the plausible group means strongly overlap, or are they clearly separated?
 
-> *Write your answer here.*
+> *The bootstrap visualization shows the two distributions are clearly separated with little to no overlap. This shows that the values for the group means are different. The visual itself explains why the t-test produced a small p-value and rejected the null hypothesis. Because the plausible means for Day and Night do not overlap much, it provides strong evidence that soil water content differs between the two groups.*
 
 ---
 
@@ -540,20 +540,22 @@ You must:
 - define the grouping variable clearly
 - explain why the grouping is scientifically meaningful
 
-```{r choose_second_group, echo=TRUE, eval=FALSE}
+```{r choose_second_group, echo=TRUE, eval=TRUE}
 # GOAL: create your own two-level grouping variable.
 
 df <- df %>%
   mutate(
-    my_group = ___
-  )
+    my_group = if_else(month %in% c(6,7,8), "Summer", "Other")
+  ) %>% 
+  filter(!is.na(my_group))
 
 df %>% count(my_group)
+
 ```
 
 **Prompt (2–3 sentences):** Why did you choose this grouping variable? What scientific contrast are you testing?
 
-> *Write your answer here.*
+> *I chose this grouping variable into summer vs non-summer months because seasonal changes can strongly influence ecosystem processes for example such as ta, swc, and etc. This grouping allows us to test whether the response variable differs between warmer summer months and the rest of the year. *
 
 ---
 
@@ -566,29 +568,48 @@ Repeat the workflow:
 4. run `t.test()`
 5. interpret
 
-```{r visualize_second_group, echo=TRUE, eval=FALSE}
+```{r visualize_second_group, echo=TRUE, eval=TRUE}
 # GOAL: visualize your response by your chosen grouping variable.
-
-___
+df %>%
+  ggplot(aes(x = my_group, y = ta, fill = my_group)) +
+  geom_boxplot(alpha = 0.8) +
+  theme_classic(base_size = 18) +
+  labs(
+    x = NULL,
+    y = "le",
+    title = "Not Summer"
+  )
 ```
 
-```{r summarize_second_group, echo=TRUE, eval=FALSE}
+```{r summarize_second_group, echo=TRUE, eval=TRUE}
 # GOAL: summarize your response variable by your chosen grouping variable.
 
-___
+group_variable_summary <- df %>%
+  filter(!is.na(ta)) %>%
+  group_by(my_group) %>%
+  summarise(
+    mean_response = mean(ta, na.rm = TRUE),
+    sd_response = sd(ta, na.rm = TRUE),
+    n = n(),
+    .groups = "drop"
+  )
+
+group_variable_summary
 ```
 
-```{r ttest_second_group, echo=TRUE, eval=FALSE}
+```{r ttest_second_group, echo=TRUE, eval=TRUE}
 # GOAL: run a two-sample t-test for your chosen grouping variable.
-
-___
+tt_notsummer <- t.test(
+  ta ~ day_night,
+  data = df
+)
 ```
 
 **Prompt (5–6 sentences):** Compare the day/night t-test to your second grouping-variable test.  
 Which contrast was stronger? Which was more scientifically meaningful?  
 Did the two tests produce similar or different conclusions?
 
-> *Write your answer here.*
+> *The day/night t-test showed a very strong difference, with a very small p-value and a large difference in the group means. The second grouping-variable test was even stronger, with a very small p-value (8.94 e-299) and a CI between 5.57-6.18, indicating a large separation between the groups. Scientifically, the day/night difference is meaningful because many environmental variables change over the daily cycle due to sunlight and energy exchange. Both tests led to the same conclusion and thus we reject the null hypothesis, meaning the group means are significantly different in each case.*
 
 ---
 
@@ -600,7 +621,7 @@ Answer in **4–6 sentences**:
 - What changes when we move from “testing one mean” to “testing a difference in means”?
 - How did the bootstrap group-mean plot help your understanding?
 
-> *Write your answer here.*
+> *A two-sample t-test is similar to a one-mean hypothesis test because both compare an observed estimate to what we would expect from a null hypothesis. We then use a test statistic and p-value to evaluate the data set. In the one-mean test, we compare a single sample mean to a hypothesized value, while in the two-sample test we compare the means of two groups to see if they're different. The difference is that the uncertainty now comes from both groups, so we can estimate the standard error of the difference between the two means rather than just one mean. The bootstrap group-mean plot helped visualize the sampling distributions of the group means and showed how much they overlap and seeing the distributions made it easier to understand why the t-test concluded that the group means were different.*
 
 ---
 
